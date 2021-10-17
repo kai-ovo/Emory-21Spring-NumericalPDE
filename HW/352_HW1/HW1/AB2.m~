@@ -1,0 +1,24 @@
+function [U] = AB2(A, y0, y1, n, T)
+%
+%   A:  the matrix
+%   y0, y1: the 2 initial conditions
+%   n: the # of time steps
+%   T: total time step
+%
+%   U: matrix contaning each of the solutions as columns
+%
+
+%Create the matrix
+U = zeros(length(A), n+1);
+
+%The two initial values
+U(:,1) = y0;
+U(:,2) = y1;
+
+%Calculate time step 
+Dt = T/n;
+
+%Main loop to calculate numerical solution
+for i = 2:n
+    U(:,i+1) = U(:,i) + (Dt/2)*(3*A*U(:,i) + A*U(:,i-1));
+end

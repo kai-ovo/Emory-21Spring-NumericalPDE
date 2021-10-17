@@ -1,0 +1,28 @@
+function [U] = AM3(A, y0, y1, n, Dt)
+%
+%   A:  the matrix
+%   y0, y1: the 2 initial conditions
+%   n: the # of time steps
+%   Dt: time step
+%
+%   U: matrix contaning each of the solutions as columns
+%
+
+%Create the matrix
+U = zeros(length(A), n+1);
+%Build and identity matrix
+I = eye(length(A));
+
+%The two initial values
+U(:,1) = y0;
+U(:,2) = y1;
+
+%Matrices that are used several times in the loop
+M1 = I - (Dt*5/12)*A;
+M2 = (I + (Dt*2/3)*A);
+M3 = (Dt/12)*A;
+
+%Main loop to calculate the numerical solutions
+for i = 2:n
+    U(:,i+1) = M1\(M2*U(:,i) - M3*U(:,i-1));
+end

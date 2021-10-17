@@ -1,0 +1,217 @@
+\documentclass{article}
+\usepackage[english]{babel}
+\usepackage{geometry,amsmath,amssymb,enumerate,theorem}
+\geometry{letterpaper}
+
+%%%%%%%%%% Start TeXmacs macros
+\newcommand{\tmem}[1]{{\em #1\/}}
+\newcommand{\tmmathbf}[1]{\ensuremath{\boldsymbol{#1}}}
+\newcommand{\tmname}[1]{\textsc{#1}}
+\newcommand{\tmop}[1]{\ensuremath{\operatorname{#1}}}
+\newcommand{\tmsamp}[1]{\textsf{#1}}
+\newcommand{\tmstrong}[1]{\textbf{#1}}
+\newcommand{\tmtt}[1]{\texttt{#1}}
+\newenvironment{enumeratenumeric}{\begin{enumerate}[1.] }{\end{enumerate}}
+{\theorembodyfont{\rmfamily\small}\newtheorem{problem}{Problem}}
+%%%%%%%%%% End TeXmacs macros
+
+\begin{document}
+
+\title{MATH352 - FINAL PROJECT}
+
+\maketitle
+
+{\tmsamp{INSTRUCTIONS:
+Please, refer to the Syllabus for Instructions.
+Report the code you use in the Appendix (if you are not using Jupyter, in that
+case, the code is in the body), report the results (pictures, tables, etc.) in
+the body of the report.
+No page limit, but synthesis is appreciated.}}
+
+{\tmsamp{THIS IS AN INDIVIDUAL WORK}}. {\tmsamp{ANY RESOURCE (INCLUDING
+ON-LINE) BEYOND THE MATERIAL ON CANVAS MUST BE CITED IN THE REPORT.}}
+
+\begin{problem}
+  In this first part, we consider the Black and Scholes equation - Put Option
+  (see Hands On session, week 7): $V$ is the value of the Put option based on
+  the asset with price {\tmname{$x$}}, $E$ is the strike price, $r$ the
+  inflaction rate and $\sigma$ the volatility: \
+  \[ \left\{\begin{array}{l}
+       \dfrac{\partial V}{\partial \tau} + \dfrac{1}{2} \sigma^2 x^2
+       \dfrac{\partial^2 V}{\partial x^2} + r x \dfrac{\partial V}{\partial x}
+       - r V = 0, \qquad \tau \in (0, T], x \in (0, x_{\tmop{MAX}})\\
+       V (x, T) = \max (E - x, 0),\\
+       V (0, \tau) = E e^{- r (T - \tau)}, \quad V (x_{\tmop{MAX}}, \tau) = 0.
+     \end{array}\right. \]
+  In the following, set $E = 30$, $r = 0.05$, $\sigma = 0.1$, $x_{\tmop{MAX}}
+  = 100$, $T = 1.$ This is a final value problem. In the HandsOn session we
+  converted it into a classical initial value problem with the change of
+  variable $t = T - \tau$, so that the final time $\tau = T$ is mapped into
+  the initial time $t = 0$.
+  \begin{enumeratenumeric}
+    \item Write the problem in the {\tmstrong{``divergence'' initial-value}}
+    form (for $t = T - \tau$):
+    \[ \begin{array}{l}
+         \dfrac{\partial V}{\partial t} - \dfrac{\partial}{\partial x} \left(
+         \mu (x) \dfrac{\partial^{} V}{\partial x^{}} \right) + \beta (x)
+         \dfrac{\partial V}{\partial x} + \sigma V = 0, \qquad t \in (0, T], x
+         \in (0, x_{\tmop{MAX}})\\
+         V (x, 0) = \max (E - x, 0),\\
+         V (0, t) = E e^{- r (T - \tau)}, \quad V (x_{\tmop{MAX}}, t) = 0
+       \end{array}, \]
+    by finding appropriate coefficents $\mu (x) > 0$, $\beta (x)$ and $\sigma
+    .$
+    
+    \item Write the weak formulation of the problem and its Finite Element
+    approximation with the $\theta$-method. Specify the expected convergence
+    rates.
+    
+    \item Solve the finite element approximation and compare the results with
+    the finite difference solution found in HandsOn session Week 7. Try with
+    different discretization parameters $h$ and $\Delta t$. (Suggested initial
+    values: $h = 1$, $\Delta t = 0.01$).
+    
+    \item Report a plot of the solution $V (x, \tau = 0)$. In particular,
+    compute {\tmname{$V (32, \tau = 0)$}} knowing that the ``exact'' solution
+    reads 0.1892. Comment on the accuracy of your solver as a function of $h$
+    and $\Delta t$.
+  \end{enumeratenumeric}
+  
+\end{problem}
+
+\begin{problem}
+  Let us consider now the 2D Black and Scholes equation Put Option, where the
+  option with value $V$ is based on two assets with price $x$ and $y$. The
+  equation reads for $\tau \in (0, T] :$
+  \[ \dfrac{\partial V}{\partial \tau} + \dfrac{1}{2} \sigma_1^2 x^2
+     \dfrac{\partial^2 V}{\partial x^2} + \dfrac{1}{2} \sigma_2^2 y^2
+     \dfrac{\partial^2 V}{\partial y^2} + \rho \sigma_1 \sigma_2 x y
+     \dfrac{\partial^2 V}{\partial x \partial y} + r x \dfrac{\partial
+     V}{\partial x} + r y \dfrac{\partial V}{\partial y} - r V = 0 \quad
+     \tmop{with} (x, y) \in [0, x_{\tmop{MAX}}] \times [0, y_{\tmop{MAX}}] \]
+  with the final condition $V (x, y, T) = \max (0, E - (x + y))$ and the
+  boundary conditions
+  \[ \left\{\begin{array}{l}
+       V (x, 0, \tau) = g (x, \tau)\\
+       V (x, y_{\tmop{MAX}}, \tau) = 0\\
+       V (0, y, \tau) = g (y, \tau)\\
+       V (x_{\tmop{MAX}}, y, \tau) = 0
+     \end{array}\right. \]
+  where $g (x, \tau)$ (or $g (y, \tau)$) is the solution of the 1D Black and
+  Scholes equation (when one of the asset is worthless, the problem reduces to
+  the problem only for the other asset). Here, $\rho$ is the correlation
+  coefficient between the two assets. Data: $E = 40$, $r = 0.1$, $\sigma_1 =
+  0.1$, $\sigma_2 = 0.3,$ $x_{\tmop{MAX}} = y_{\tmop{MAX}} = 100$, $T = 0.5,
+  \rho = 0.5$.
+\end{problem}
+
+{\tmstrong{PART 1: Finite Differences}}. Rewrite the problem as an initial
+value problem with the change of variable $t = T - \tau$. Write a code for the
+finite difference solution of the previous problem, by combining the 1D solver
+used in HandsOn7 for the boundary conditions $g$ with a 2D solver. For the
+discretization of the mixed derivative, you can refer to the following scheme:
+\[ \dfrac{\partial^2 V}{\partial x \partial y} (x_{i,} y_j) \approx
+   \dfrac{1}{2 \Delta x} \left( \dfrac{\partial V}{\partial y} (x_{i + 1},
+   y_j) - \dfrac{\partial V}{\partial y} (x_{i - 1}, y_j) \right) \approx
+   \dfrac{1}{4 \Delta x \Delta y} (V_{i + 1, j + 1} - V_{i + 1, j - 1} - V_{i
+   - 1, j + 1} + V_{i - 1, j - 1}) . \]
+Taking the value $V (18, 20, \tau = 0)$=2.0187 as reference value, compare the
+accuracy of your solver for different values of the discretization parameters
+(suggested values to start with: $\Delta x = \Delta y = 1$ and $\Delta t =
+0.01$).
+
+{\tmem{BONUS: This is not necessary. This bonus is worth 10 points. Recalling
+the Taylor expansion in 2D
+\[ f (x + \Delta x, y + \Delta y) = f (x, y) + \dfrac{\partial f}{\partial x}
+   (x, y) \Delta x + \dfrac{\partial f}{\partial y} (x, y) \Delta y +
+   \dfrac{1}{2!} \left[ \dfrac{\partial^2 f}{\partial x^2} (x, y) \Delta x^2 +
+   2 \dfrac{\partial^2 f}{\partial x \partial y} (x, y) \Delta x \Delta y +
+   \dfrac{\partial^2 f}{\partial y^2} (x, y) \Delta y^2 \right] + \sum_{n =
+   3}^{\infty} \dfrac{1}{n!} \sum^n_{k = 0} \left( \begin{array}{c}
+     n\\
+     k
+   \end{array} \right) \dfrac{\partial^n f}{\partial x^k \partial y^{n - k}}
+   \Delta x^k \Delta y^{n - k}, \]
+for $h = \Delta x = \Delta y$, find the convergence rate $p$ of the previous
+formula for the mixed second derivative (i.e. the error as $\mathcal{O}
+(h^p)$).
+
+\ }}
+
+{\tmstrong{PART 2: Finite Elements. }}
+
+1) Verify that the problem admits the following ``divergence'' initial value
+form, for $t = T - \tau$:
+\[ \dfrac{\partial V}{\partial t} - \nabla \cdot (\mathbb{T} \nabla V)
+   +\tmmathbf{\beta} \cdot \nabla V + r V = 0 \]
+where
+\[ \mathbb{T} \equiv \dfrac{1}{2} \left(\begin{array}{cc}
+     \sigma_1^2 x^2 & \rho \sigma_1 \sigma_2 x y\\
+     \rho \sigma_1 \sigma_2 x y & \sigma^2_2 y^2
+   \end{array}\right) \]
+is a matrix (or tensor) and
+\[ \tmmathbf{\beta} \equiv \left( \begin{array}{c}
+     \left( \sigma_1^2 + \dfrac{1}{2} \rho \sigma_1 \sigma_2 - r \right) x\\
+     \left( \sigma_2^2 + \dfrac{1}{2} \rho \sigma_1 \sigma_2 - r \right) y
+   \end{array} \right) \]
+is a vector.
+
+Note that here $\mathbb{T} \nabla V$ denotes the matrix-vector product
+\[ \dfrac{1}{2} \left(\begin{array}{cc}
+     \sigma_1^2 x^2 & \rho \sigma_1 \sigma_2 x y\\
+     \rho \sigma_1 \sigma_2 x y & \sigma^2_2 y^2
+   \end{array}\right) \left( \begin{array}{c}
+     \dfrac{\partial V}{\partial x}\\
+     \dfrac{\partial V}{\partial y}
+   \end{array} \right) = \dfrac{1}{2} \left( \begin{array}{c}
+     \sigma^2_1 x^2 \dfrac{\partial V}{\partial x} + \rho \sigma_1 \sigma_2 x
+     y \dfrac{\partial V}{\partial y}\\
+     \rho \sigma_1 \sigma_2 x y \dfrac{\partial V}{\partial x} + \sigma^2_2
+     y^2 \dfrac{\partial V}{\partial y}
+   \end{array} \right) \]
+and that $\nabla \cdot (\mathbb{T} \nabla V)$ stands for the divergence of the
+$\mathbb{T} \nabla V$ vector:
+\[ \nabla \cdot (\mathbb{T} \nabla V) \equiv \dfrac{\partial}{\partial x}
+   \left( \dfrac{1}{2} \left( \sigma^2_1 x^2 \dfrac{\partial V}{\partial x} +
+   \rho \sigma_1 \sigma_2 x y \dfrac{\partial V}{\partial y} \right) \right) +
+   \dfrac{\partial}{\partial y} \left( \dfrac{1}{2} \left( \rho \sigma_1
+   \sigma_2 x y \dfrac{\partial V}{\partial x} + \sigma^2_2 y^2
+   \dfrac{\partial V}{\partial y} \right) \right) . \]
+2) Write the weak formulation of the problem in this divergence form. To this
+aim, keep in mind that for a test function $\varphi (x, y)$ vanishing on the
+boundary
+\[ - \int_{\Omega} \nabla \cdot (\mathbb{T} \nabla V) \varphi d \omega =
+   \int_{\Omega} \mathbb{T} \nabla V \cdot \nabla \varphi d \omega \]
+where
+\[ \mathbb{T} \nabla V \cdot \nabla \varphi \equiv \dfrac{1}{2} \left(
+   \begin{array}{c}
+     \sigma^2_1 x^2 \dfrac{\partial V}{\partial x} + \rho \sigma_1 \sigma_2 x
+     y \dfrac{\partial V}{\partial y}\\
+     \rho \sigma_1 \sigma_2 x y \dfrac{\partial V}{\partial x} + \sigma^2_2
+     y^2 \dfrac{\partial V}{\partial y}
+   \end{array} \right) \cdot \left( \begin{array}{c}
+     \dfrac{\partial \varphi}{\partial x}\\
+     \dfrac{\partial \varphi}{\partial y}
+   \end{array} \right) = \dfrac{1}{2} \left( \left( \sigma^2_1 x^2
+   \dfrac{\partial V}{\partial x} + \rho \sigma_1 \sigma_2 x y \dfrac{\partial
+   V}{\partial y} \right) \dfrac{\partial \varphi}{\partial x} + \left( \rho
+   \sigma_1 \sigma_2 x y \dfrac{\partial V}{\partial x} + \sigma^2_2 y^2
+   \dfrac{\partial V}{\partial y} \right) \dfrac{\partial \varphi}{\partial y}
+   \right) . \]
+
+
+3) Write the finite element+$\theta -$method discretization of the problem.
+Specify the expected accuracy of the discretization, assuming that the
+solution is infinitely regular.
+
+{\tmstrong{{\tmem{BONUS - This part is not necessary. It is worth 40 bonus
+points.
+Write a Fenics code for the problem. To do so, consider that the function
+{\tmtt{inner}} can perform the needed products. Alternatively, the derivative
+$\dfrac{\partial V}{\partial x}$ can be written as {\tmtt{V.dx(0)}} while
+$\dfrac{\partial V}{\partial y}$ is {\tmtt{V.dx(1)}} (and similar for
+$\varphi$). Compare the solution with the finite difference one.}}}}
+
+
+
+\end{document}
